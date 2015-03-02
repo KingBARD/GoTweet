@@ -42,9 +42,13 @@ type EndPoints struct {
 	MediaUpload        string
 	ReportSpam         string
 	DeleteTweet        string
+	DMShow             string
+	DMSent             string
 }
 
 var ENDPOINT = EndPoints{
+	DMShow:             fmt.Sprintf("%sdirect_messages/show.json", BASEURL),
+	DMSent:             fmt.Sprintf("%sdirect_messages/sent.json", BASEURL),
 	DeleteTweet:        fmt.Sprintf("%sstatuses/destroy/:id.json", BASEURL),
 	ReportSpam:         fmt.Sprintf("%susers/report_spam.json", BASEURL),
 	GetAccountSettings: fmt.Sprintf("%saccount/settings.json", BASEURL),
@@ -71,11 +75,15 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-func (P *Account) DirectMessageShow() string {
+func (P *Account) DirectMessageShow(ID string) string {
+	var Params = params
+	Params.Add("id", ID)
+	resp := DoRequest(ENDPOINT.DMShow, Params, "GET")
 
+	return resp
 }
 
-func (P *Account) DirectMessageSent() string {
+func (P *Account) DirectMessageSent(Page, Count string) string {
 
 }
 
