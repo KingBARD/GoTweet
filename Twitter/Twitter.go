@@ -77,6 +77,7 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
+//UNTESTED
 func (P *Account) Search(Query, GeoCode string) string {
 	var Params = params
 
@@ -92,6 +93,7 @@ func (P *Account) Search(Query, GeoCode string) string {
 
 }
 
+//UNTESTED
 func (P *Account) DirectMessageShow(ID string) string {
 	var Params = params
 	Params.Add("id", ID)
@@ -100,6 +102,7 @@ func (P *Account) DirectMessageShow(ID string) string {
 	return resp
 }
 
+//UNTESTED
 func (P *Account) DirectMessageSent(Page, Count string) string {
 
 	var Params = params
@@ -117,6 +120,7 @@ func (P *Account) DirectMessageSent(Page, Count string) string {
 
 }
 
+//UNTESTED
 func (P *Account) ReportForSpam(ID string) string {
 
 	var Params = params
