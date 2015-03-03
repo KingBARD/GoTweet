@@ -85,6 +85,19 @@ func (P *Account) DirectMessageShow(ID string) string {
 
 func (P *Account) DirectMessageSent(Page, Count string) string {
 
+	var Params = params
+
+	switch {
+	case Page != "":
+		Params.Add("page", Page)
+	case Count != "":
+		Params.Add("id", Count)
+	}
+
+	resp := DoRequest(ENDPOINT.DMSent, Params, "GET")
+
+	return resp
+
 }
 
 func (P *Account) ReportForSpam(ID string) string {
