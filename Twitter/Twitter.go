@@ -44,6 +44,7 @@ type EndPoints struct {
 	DeleteTweet        string
 	DMShow             string
 	DMSent             string
+	Search             string
 }
 
 var ENDPOINT = EndPoints{
@@ -65,6 +66,7 @@ var ENDPOINT = EndPoints{
 	Retweeters:         fmt.Sprintf("%sstatuses/retweeters/ids.json", BASEURL),
 	LookUp:             fmt.Sprintf("%sstatuses/lookup.json", BASEURL),
 	MediaUpload:        fmt.Sprintf("%smedia/upload.json", BASEURL),
+	Search:             fmt.Sprintf("%ssearch/tweets.json", BASEURL),
 }
 
 var oauthClient = oauth.Client{
@@ -74,6 +76,21 @@ var oauthClient = oauth.Client{
 }
 
 var token = &oauthClient.Credentials
+
+func (P *Account) Search(Query, GeoCode string) string {
+	var Params = params
+
+	Params.Add("q", Query)
+
+	if GeoCode != "" {
+		Params.Add("geocode", GeoCode)
+	}
+
+	resp := DoRequest(ENDPOINT.Search, Params, "GET")
+
+	return resp
+
+}
 
 func (P *Account) DirectMessageShow(ID string) string {
 	var Params = params
@@ -347,7 +364,7 @@ func (P *Account) Auth() {
 	case "darwin":
 		exec.Command("open", test).Start()
 	default:
-		fmt.Println("Error opening the link try manualy opening the link: ", test)
+		fmt.Println("Error opening the link try manually opening the link: ", test)
 	}
 
 	var code string
@@ -369,14 +386,14 @@ func DoRequest(Endpoint string, Params url.Values, Method string) string {
 		resp, err := oauthClient.Post(http.DefaultClient, token, Endpoint, Params)
 
 		if err != nil {
-			log.Fatal(err)
+			return "", errs
 		}
 		defer resp.Body.Close()
 
 		body, errs := ioutil.ReadAll(resp.Body)
 
 		if errs != nil {
-			log.Fatal(errs)
+			return "", errs
 		}
 
 		return string(body)
@@ -384,14 +401,14 @@ func DoRequest(Endpoint string, Params url.Values, Method string) string {
 		resp, err := oauthClient.Get(http.DefaultClient, token, Endpoint, Params)
 
 		if err != nil {
-			log.Fatal(err)
+			return "", err
 		}
 		defer resp.Body.Close()
 
 		body, errs := ioutil.ReadAll(resp.Body)
 
 		if errs != nil {
-			log.Fatal(errs)
+			return "", errs
 		}
 
 		return string(body)
