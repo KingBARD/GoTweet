@@ -319,6 +319,7 @@ func (P *Account) Retweet(TweetID string) string {
 
 	resp := DoRequest(strings.Replace(ENDPOINT.Retweet, ":id", TweetID, -1), Params, "POST")
 	if strings.Contains(resp, "You have already retweeted this tweet.") {
+		//change this to return new error etc
 		log.Fatal("You can not retweet a tweet that is already retweeted")
 	}
 
@@ -341,19 +342,20 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 	case DisplayCoordinates:
 		Params.Add("display_coordinates", "true")
 	}
+
 	resp := DoRequest(ENDPOINT.Tweet, Params, "POST")
 
 	return resp
 }
 
-func (P *Account) Auth() {
+func (P *Account) Auth() (string, error) {
 	oauthClient.Credentials.Token = P.ConsumerKey
 	oauthClient.Credentials.Secret = P.ConsumerSecret
 
 	tempcred, errors := oauthClient.RequestTemporaryCredentials(http.DefaultClient, "oob", nil)
 
 	if errors != nil {
-		log.Fatal(errors)
+		return "", errors
 	}
 
 	test := oauthClient.AuthorizationURL(tempcred, nil)
@@ -377,20 +379,21 @@ func (P *Account) Auth() {
 	tokenCred, _, err := oauthClient.RequestToken(http.DefaultClient, tempcred, code)
 
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
 
 	token = tokenCred
+
+	return "", nil
 }
 func DoRequest(Endpoint string, Params url.Values, Method string) string {
 
-	//what the fuck was i thinking?????
 	switch Method {
 	case "POST":
 		resp, err := oauthClient.Post(http.DefaultClient, token, Endpoint, Params)
 
 		if err != nil {
-			return "", errs
+			return "", err
 		}
 		defer resp.Body.Close()
 
@@ -417,7 +420,8 @@ func DoRequest(Endpoint string, Params url.Values, Method string) string {
 
 		return string(body)
 	}
-	return "Method"
+	//What??
+	return "Method n"
 
 }
 
