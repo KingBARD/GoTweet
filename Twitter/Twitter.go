@@ -2,6 +2,7 @@ package TwitterAPI
 
 import (
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"github.com/antonholmquist/jason"
 	"github.com/garyburd/go-oauth/oauth"
@@ -349,6 +350,7 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 }
 
 func (P *Account) Auth() (string, error) {
+
 	oauthClient.Credentials.Token = P.ConsumerKey
 	oauthClient.Credentials.Secret = P.ConsumerSecret
 
@@ -386,7 +388,7 @@ func (P *Account) Auth() (string, error) {
 
 	return "", nil
 }
-func DoRequest(Endpoint string, Params url.Values, Method string) string {
+func DoRequest(Endpoint string, Params url.Values, Method string) (string, error) {
 
 	switch Method {
 	case "POST":
@@ -399,11 +401,11 @@ func DoRequest(Endpoint string, Params url.Values, Method string) string {
 
 		body, errs := ioutil.ReadAll(resp.Body)
 
-		if errs != nil {
-			return "", errs
+		if err != nil {
+			return "", err
 		}
 
-		return string(body)
+		return string(body), nil
 	case "GET":
 		resp, err := oauthClient.Get(http.DefaultClient, token, Endpoint, Params)
 
@@ -412,16 +414,16 @@ func DoRequest(Endpoint string, Params url.Values, Method string) string {
 		}
 		defer resp.Body.Close()
 
-		body, errs := ioutil.ReadAll(resp.Body)
+		body, err := ioutil.ReadAll(resp.Body)
 
-		if errs != nil {
-			return "", errs
+		if err != nil {
+			return "", err
 		}
 
-		return string(body)
+		return string(body), nil
 	}
-	//What??
-	return "Method n"
+
+	return "", errors.New("You must supply either a GET or POST method.")
 
 }
 
