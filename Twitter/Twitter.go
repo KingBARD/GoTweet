@@ -88,7 +88,7 @@ func (P *Account) Search(Query, GeoCode string) string {
 		Params.Add("geocode", GeoCode)
 	}
 
-	resp := DoRequest(ENDPOINT.Search, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.Search, Params, "GET")
 
 	return resp
 
@@ -98,7 +98,8 @@ func (P *Account) Search(Query, GeoCode string) string {
 func (P *Account) DirectMessageShow(ID string) string {
 	var Params = params
 	Params.Add("id", ID)
-	resp := DoRequest(ENDPOINT.DMShow, Params, "GET")
+
+	resp, _ := DoRequest(ENDPOINT.DMShow, Params, "GET")
 
 	return resp
 }
@@ -115,7 +116,7 @@ func (P *Account) DirectMessageSent(Page, Count string) string {
 		Params.Add("id", Count)
 	}
 
-	resp := DoRequest(ENDPOINT.DMSent, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.DMSent, Params, "GET")
 
 	return resp
 
@@ -128,7 +129,7 @@ func (P *Account) ReportForSpam(ID string) string {
 
 	Params.Add("id", ID)
 
-	resp := DoRequest(ENDPOINT.ReportSpam, Params, "POST")
+	resp, _ := DoRequest(ENDPOINT.ReportSpam, Params, "POST")
 
 	return resp
 
@@ -140,7 +141,7 @@ func (P *Account) DeleteTweet(ID string) string {
 
 	Params.Add("id", ID)
 
-	resp := DoRequest(strings.Replace(ENDPOINT.DeleteTweet, ":id", ID, -1), Params, "POST")
+	resp, _ := DoRequest(strings.Replace(ENDPOINT.DeleteTweet, ":id", ID, -1), Params, "POST")
 
 	return resp
 
@@ -152,7 +153,7 @@ func (P *Account) Retweeters(ID string) string {
 
 	Params.Add("id", ID)
 
-	resp := DoRequest(ENDPOINT.Retweeters, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.Retweeters, Params, "GET")
 
 	return resp
 }
@@ -165,7 +166,7 @@ func (P *Account) RetweetsByID(ID, Count string) string {
 		Params.Add("count", Count)
 	}
 
-	resp := DoRequest(strings.Replace(ENDPOINT.RetweetsByID, ":id", ID, -1), Params, "GET")
+	resp, _ := DoRequest(strings.Replace(ENDPOINT.RetweetsByID, ":id", ID, -1), Params, "GET")
 	return resp
 }
 func (P *Account) RetweetsOfMe(Count string) string {
@@ -175,7 +176,7 @@ func (P *Account) RetweetsOfMe(Count string) string {
 		Params.Add("count", Count)
 	}
 
-	resp := DoRequest(ENDPOINT.RetweetsOfMe, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.RetweetsOfMe, Params, "GET")
 
 	return resp
 
@@ -193,14 +194,14 @@ func (P *Account) Oembed(ID, URL string) string {
 		Params.Add("url", URL)
 	}
 
-	resp := DoRequest(ENDPOINT.Oembed, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.Oembed, Params, "GET")
 
 	return resp
 }
 
 func (P *Account) GetAccountSettings() string {
 
-	resp := DoRequest(ENDPOINT.GetAccountSettings, nil, "GET")
+	resp, _ := DoRequest(ENDPOINT.GetAccountSettings, nil, "GET")
 
 	return resp
 
@@ -210,7 +211,7 @@ func (P *Account) ShowTweet(ID string) string {
 
 	Params.Add("id", ID)
 
-	resp := DoRequest(ENDPOINT.ShowTweet, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.ShowTweet, Params, "GET")
 
 	return resp
 }
@@ -221,7 +222,7 @@ func (P *Account) LookUp(IDS []string) string {
 
 	Params.Add("id", ids)
 
-	resp := DoRequest(ENDPOINT.LookUp, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.LookUp, Params, "GET")
 
 	return resp
 }
@@ -261,10 +262,10 @@ func (P *Account) GetHomeTimeline(Count string) string {
 	var Paramas = params
 	if Count != "" {
 		Paramas.Add("count", Count)
-		resp := DoRequest(ENDPOINT.MentionsTimeline, Paramas, "GET")
+		resp, _ := DoRequest(ENDPOINT.MentionsTimeline, Paramas, "GET")
 		return resp
 	}
-	resp := DoRequest(ENDPOINT.MentionsTimeline, nil, "GET")
+	resp, _ := DoRequest(ENDPOINT.MentionsTimeline, nil, "GET")
 
 	return resp
 
@@ -276,7 +277,8 @@ func (P *Account) GetMentionsTimeline(Count string) string {
 		Params.Add("count", Count)
 	}
 
-	resp := DoRequest(ENDPOINT.MentionsTimeline, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.MentionsTimeline, Params, "GET")
+
 	return resp
 }
 func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string, IncludeRetweets bool) string {
@@ -293,7 +295,7 @@ func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string
 		Params.Add("user_Id", UserID)
 	}
 
-	resp := DoRequest(ENDPOINT.UserTimeline, Params, "GET")
+	resp, _ := DoRequest(ENDPOINT.UserTimeline, Params, "GET")
 
 	return resp
 
@@ -303,7 +305,7 @@ func (P *Account) FavouriteTweet(TweetID string) string {
 
 	Params.Add("id", TweetID)
 
-	resp := DoRequest(ENDPOINT.Favourite, Params, "POST")
+	resp, _ := DoRequest(ENDPOINT.Favourite, Params, "POST")
 	return resp
 
 }
@@ -318,7 +320,7 @@ func (P *Account) Retweet(TweetID string) string {
 
 	Params.Add("id", TweetID)
 
-	resp := DoRequest(strings.Replace(ENDPOINT.Retweet, ":id", TweetID, -1), Params, "POST")
+	resp, _ := DoRequest(strings.Replace(ENDPOINT.Retweet, ":id", TweetID, -1), Params, "POST")
 	if strings.Contains(resp, "You have already retweeted this tweet.") {
 		//change this to return new error etc
 		log.Fatal("You can not retweet a tweet that is already retweeted")
@@ -327,7 +329,7 @@ func (P *Account) Retweet(TweetID string) string {
 	return resp
 
 }
-func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, PossiblySenstive bool, DisplayCoordinates bool) string {
+func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, PossiblySenstive bool, DisplayCoordinates bool) (bool, string) {
 	var Params = params
 
 	Params.Add("status", Status)
@@ -344,9 +346,9 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 		Params.Add("display_coordinates", "true")
 	}
 
-	resp := DoRequest(ENDPOINT.Tweet, Params, "POST")
+	resp, _ := DoRequest(ENDPOINT.Tweet, Params, "POST")
 
-	return resp
+	return true, resp
 }
 
 func (P *Account) Auth() (string, error) {
@@ -399,7 +401,7 @@ func DoRequest(Endpoint string, Params url.Values, Method string) (string, error
 		}
 		defer resp.Body.Close()
 
-		body, errs := ioutil.ReadAll(resp.Body)
+		body, err := ioutil.ReadAll(resp.Body)
 
 		if err != nil {
 			return "", err
