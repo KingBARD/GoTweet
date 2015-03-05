@@ -79,7 +79,7 @@ var oauthClient = oauth.Client{
 var token = &oauthClient.Credentials
 
 //UNTESTED
-func (P *Account) Search(Query, GeoCode string) string {
+func (P *Account) Search(Query, GeoCode string) (string, error) {
 	var Params = params
 
 	Params.Add("q", Query)
@@ -88,24 +88,32 @@ func (P *Account) Search(Query, GeoCode string) string {
 		Params.Add("geocode", GeoCode)
 	}
 
-	resp, _ := DoRequest(ENDPOINT.Search, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.Search, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 
 //UNTESTED
-func (P *Account) DirectMessageShow(ID string) string {
+func (P *Account) DirectMessageShow(ID string) (string, error) {
 	var Params = params
 	Params.Add("id", ID)
 
-	resp, _ := DoRequest(ENDPOINT.DMShow, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.DMShow, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", nil
+	}
+
+	return resp, nil
 }
 
 //UNTESTED
-func (P *Account) DirectMessageSent(Page, Count string) string {
+func (P *Account) DirectMessageSent(Page, Count string) (string, error) {
 
 	var Params = params
 
@@ -116,49 +124,65 @@ func (P *Account) DirectMessageSent(Page, Count string) string {
 		Params.Add("id", Count)
 	}
 
-	resp, _ := DoRequest(ENDPOINT.DMSent, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.DMSent, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 
 //UNTESTED
-func (P *Account) ReportForSpam(ID string) string {
+func (P *Account) ReportForSpam(ID string) (string, error) {
 
 	var Params = params
 
 	Params.Add("id", ID)
 
-	resp, _ := DoRequest(ENDPOINT.ReportSpam, Params, "POST")
+	resp, err := DoRequest(ENDPOINT.ReportSpam, Params, "POST")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 
-func (P *Account) DeleteTweet(ID string) string {
+func (P *Account) DeleteTweet(ID string) (string, error) {
 
 	var Params = params
 
 	Params.Add("id", ID)
 
-	resp, _ := DoRequest(strings.Replace(ENDPOINT.DeleteTweet, ":id", ID, -1), Params, "POST")
+	resp, err := DoRequest(strings.Replace(ENDPOINT.DeleteTweet, ":id", ID, -1), Params, "POST")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 
-func (P *Account) Retweeters(ID string) string {
+func (P *Account) Retweeters(ID string) (string, error) {
 	//Cursor doesn't work?
 	var Params = params
 
 	Params.Add("id", ID)
 
-	resp, _ := DoRequest(ENDPOINT.Retweeters, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.Retweeters, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 
-func (P *Account) RetweetsByID(ID, Count string) string {
+func (P *Account) RetweetsByID(ID, Count string) (string, error) {
 	var Params = params
 	Params.Add("id", ID)
 
@@ -166,23 +190,30 @@ func (P *Account) RetweetsByID(ID, Count string) string {
 		Params.Add("count", Count)
 	}
 
-	resp, _ := DoRequest(strings.Replace(ENDPOINT.RetweetsByID, ":id", ID, -1), Params, "GET")
-	return resp
+	resp, err := DoRequest(strings.Replace(ENDPOINT.RetweetsByID, ":id", ID, -1), Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+	return resp, nil
 }
-func (P *Account) RetweetsOfMe(Count string) string {
+func (P *Account) RetweetsOfMe(Count string) (string, error) {
 	var Params = params
 
 	if Count != "" {
 		Params.Add("count", Count)
 	}
 
-	resp, _ := DoRequest(ENDPOINT.RetweetsOfMe, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.RetweetsOfMe, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+	return resp, nil
 
 }
 
-func (P *Account) Oembed(ID, URL string) string {
+func (P *Account) Oembed(ID, URL string) (string, error) {
 	var Params = params
 
 	switch {
@@ -194,28 +225,32 @@ func (P *Account) Oembed(ID, URL string) string {
 		Params.Add("url", URL)
 	}
 
-	resp, _ := DoRequest(ENDPOINT.Oembed, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.Oembed, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 
-func (P *Account) GetAccountSettings() string {
+func (P *Account) GetAccountSettings() (string, error) {
 
 	resp, _ := DoRequest(ENDPOINT.GetAccountSettings, nil, "GET")
 
 	return resp
 
 }
-func (P *Account) ShowTweet(ID string) string {
+func (P *Account) ShowTweet(ID string) (string, error) {
 	var Params = params
 
 	Params.Add("id", ID)
 
 	resp, _ := DoRequest(ENDPOINT.ShowTweet, Params, "GET")
 
-	return resp
+	return resp, nil
 }
-func (P *Account) LookUp(IDS []string) string {
+func (P *Account) LookUp(IDS []string) (string, error) {
 	var Params = params
 
 	ids := strings.Join(IDS, ",")
@@ -224,9 +259,9 @@ func (P *Account) LookUp(IDS []string) string {
 
 	resp, _ := DoRequest(ENDPOINT.LookUp, Params, "GET")
 
-	return resp
+	return resp, nil
 }
-func (P *Account) MediaUpload(FilePath string, tweet bool) string {
+func (P *Account) MediaUpload(FilePath string, tweet bool) (string, error) {
 	filedata, _ := ioutil.ReadFile(FilePath)
 
 	encoded := base64.StdEncoding.EncodeToString(filedata)
@@ -258,20 +293,23 @@ func (P *Account) MediaUpload(FilePath string, tweet bool) string {
 	return string(body)
 
 }
-func (P *Account) GetHomeTimeline(Count string) string {
+func (P *Account) GetHomeTimeline(Count string) (string, error) {
+
 	var Paramas = params
+
 	if Count != "" {
 		Paramas.Add("count", Count)
 		resp, _ := DoRequest(ENDPOINT.MentionsTimeline, Paramas, "GET")
 		return resp
 	}
+
 	resp, _ := DoRequest(ENDPOINT.MentionsTimeline, nil, "GET")
 
 	return resp
 
 }
 
-func (P *Account) GetMentionsTimeline(Count string) string {
+func (P *Account) GetMentionsTimeline(Count string) (string, error) {
 	var Params = params
 	if Count != "" {
 		Params.Add("count", Count)
@@ -281,7 +319,7 @@ func (P *Account) GetMentionsTimeline(Count string) string {
 
 	return resp
 }
-func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string, IncludeRetweets bool) string {
+func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string, IncludeRetweets bool) (string, error) {
 
 	var Params = params
 
@@ -300,7 +338,7 @@ func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string
 	return resp
 
 }
-func (P *Account) FavouriteTweet(TweetID string) string {
+func (P *Account) FavouriteTweet(TweetID string) (string, error) {
 	var Params = params
 
 	Params.Add("id", TweetID)
@@ -314,7 +352,7 @@ func (P *Account) UnAuth() {
 	token = nil
 }
 
-func (P *Account) Retweet(TweetID string) string {
+func (P *Account) Retweet(TweetID string) (string, error) {
 
 	var Params = params
 
@@ -329,13 +367,13 @@ func (P *Account) Retweet(TweetID string) string {
 	return resp
 
 }
-func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, PossiblySenstive bool, DisplayCoordinates bool) (bool, string) {
+func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, PossiblySenstive bool, DisplayCoordinates bool) (string, error) {
 	var Params = params
 
 	Params.Add("status", Status)
 	switch {
 	case Status == "" && MediaId == "":
-		log.Fatal("Status can not be empty")
+		return "", errors.New("Status cannot be empty")
 	case MediaId != "":
 		Params.Add("media_ids", MediaId)
 	case ReplyStatusID != "":
@@ -348,7 +386,7 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 
 	resp, _ := DoRequest(ENDPOINT.Tweet, Params, "POST")
 
-	return true, resp
+	return resp, nil
 }
 
 func (P *Account) Auth() (string, error) {
@@ -376,7 +414,6 @@ func (P *Account) Auth() (string, error) {
 	default:
 		fmt.Println("Error opening the link try manually opening the link: ", test)
 	}
-
 	var code string
 	fmt.Scanln(&code)
 
