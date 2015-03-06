@@ -236,9 +236,13 @@ func (P *Account) Oembed(ID, URL string) (string, error) {
 
 func (P *Account) GetAccountSettings() (string, error) {
 
-	resp, _ := DoRequest(ENDPOINT.GetAccountSettings, nil, "GET")
+	resp, err := DoRequest(ENDPOINT.GetAccountSettings, nil, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 func (P *Account) ShowTweet(ID string) (string, error) {
@@ -246,7 +250,11 @@ func (P *Account) ShowTweet(ID string) (string, error) {
 
 	Params.Add("id", ID)
 
-	resp, _ := DoRequest(ENDPOINT.ShowTweet, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.ShowTweet, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
 
 	return resp, nil
 }
@@ -257,40 +265,51 @@ func (P *Account) LookUp(IDS []string) (string, error) {
 
 	Params.Add("id", ids)
 
-	resp, _ := DoRequest(ENDPOINT.LookUp, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.LookUp, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
 
 	return resp, nil
 }
 func (P *Account) MediaUpload(FilePath string, tweet bool) (string, error) {
+
 	filedata, _ := ioutil.ReadFile(FilePath)
 
 	encoded := base64.StdEncoding.EncodeToString(filedata)
+
 	var Params = params
+
 	Params.Add("media", encoded)
 
 	resp, _ := oauthClient.Post(http.DefaultClient, token, "https://upload.twitter.com/1.1/media/upload.json", Params)
 	defer resp.Body.Close()
 
-	body, errs := ioutil.ReadAll(resp.Body)
-	if errs != nil {
-		log.Fatal(errs)
-	}
-	j, err := jason.NewObjectFromBytes([]byte(string(body)))
+	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatal(err)
+		return "", err
 	}
-	m, errs := j.GetString("media_id_string")
-	if errs != nil {
-		log.Fatal(errs)
+
+	j, err := jason.NewObjectFromBytes([]byte(string(body)))
+
+	if err != nil {
+		return "", err
+	}
+
+	m, err := j.GetString("media_id_string")
+
+	if err != nil {
+		return "", err
 	}
 	//Json decode response get media id then parse it to the Tweet function below
 	if tweet {
 		P.Tweet("", "", m, false, false)
 	} else {
-		return m
+		return m, nil
 	}
 
-	return string(body)
+	return string(body), nil
 
 }
 func (P *Account) GetHomeTimeline(Count string) (string, error) {
@@ -299,13 +318,22 @@ func (P *Account) GetHomeTimeline(Count string) (string, error) {
 
 	if Count != "" {
 		Paramas.Add("count", Count)
-		resp, _ := DoRequest(ENDPOINT.MentionsTimeline, Paramas, "GET")
-		return resp
+		resp, err := DoRequest(ENDPOINT.MentionsTimeline, Paramas, "GET")
+
+		if err != nil {
+			return "", err
+		}
+
+		return resp, nil
 	}
 
-	resp, _ := DoRequest(ENDPOINT.MentionsTimeline, nil, "GET")
+	resp, err := DoRequest(ENDPOINT.MentionsTimeline, nil, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 
@@ -315,17 +343,22 @@ func (P *Account) GetMentionsTimeline(Count string) (string, error) {
 		Params.Add("count", Count)
 	}
 
-	resp, _ := DoRequest(ENDPOINT.MentionsTimeline, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.MentionsTimeline, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string, IncludeRetweets bool) (string, error) {
 
 	var Params = params
 
 	if ScreenName == "" && UserID == "" {
-		log.Fatal("Nigga what the fuck thinking??/??")
+		return "", errors.New("Screenname and UserID can't be both empty")
 	}
+
 	switch {
 	case ScreenName != "":
 		Params.Add("screen_name", ScreenName)
@@ -333,18 +366,27 @@ func (P *Account) GetUserTimeline(ScreenName string, UserID string, Count string
 		Params.Add("user_Id", UserID)
 	}
 
-	resp, _ := DoRequest(ENDPOINT.UserTimeline, Params, "GET")
+	resp, err := DoRequest(ENDPOINT.UserTimeline, Params, "GET")
 
-	return resp
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 
 }
 func (P *Account) FavouriteTweet(TweetID string) (string, error) {
+
 	var Params = params
 
 	Params.Add("id", TweetID)
 
-	resp, _ := DoRequest(ENDPOINT.Favourite, Params, "POST")
-	return resp
+	resp, err := DoRequest(ENDPOINT.Favourite, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+	return resp, nil
 
 }
 
@@ -360,13 +402,13 @@ func (P *Account) Retweet(TweetID string) (string, error) {
 
 	resp, _ := DoRequest(strings.Replace(ENDPOINT.Retweet, ":id", TweetID, -1), Params, "POST")
 	if strings.Contains(resp, "You have already retweeted this tweet.") {
-		//change this to return new error etc
-		log.Fatal("You can not retweet a tweet that is already retweeted")
+		return "", errors.New("You can not retweet a tweet that is already retweeted")
 	}
 
-	return resp
+	return resp, nil
 
 }
+
 func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, PossiblySenstive bool, DisplayCoordinates bool) (string, error) {
 	var Params = params
 
@@ -384,8 +426,15 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 		Params.Add("display_coordinates", "true")
 	}
 
-	resp, _ := DoRequest(ENDPOINT.Tweet, Params, "POST")
+	resp, err := DoRequest(ENDPOINT.Tweet, Params, "POST")
 
+	if err != nil {
+		return "", err
+	}
+
+	if strings.Contains(resp, "errors") {
+		return "", errors.New("ERRORS")
+	}
 	return resp, nil
 }
 
@@ -401,6 +450,7 @@ func (P *Account) Auth() (string, error) {
 	}
 
 	test := oauthClient.AuthorizationURL(tempcred, nil)
+
 	fmt.Printf("Paste the PIN code: ")
 
 	switch runtime.GOOS {
@@ -414,6 +464,7 @@ func (P *Account) Auth() (string, error) {
 	default:
 		fmt.Println("Error opening the link try manually opening the link: ", test)
 	}
+
 	var code string
 	fmt.Scanln(&code)
 
