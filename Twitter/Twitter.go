@@ -302,7 +302,7 @@ func (P *Account) MediaUpload(FilePath string, tweet bool) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	//Json decode response get media id then parse it to the Tweet function below
+
 	if tweet {
 		P.Tweet("", "", m, false, false)
 	} else {
@@ -338,7 +338,9 @@ func (P *Account) GetHomeTimeline(Count string) (string, error) {
 }
 
 func (P *Account) GetMentionsTimeline(Count string) (string, error) {
+
 	var Params = params
+
 	if Count != "" {
 		Params.Add("count", Count)
 	}
@@ -400,7 +402,12 @@ func (P *Account) Retweet(TweetID string) (string, error) {
 
 	Params.Add("id", TweetID)
 
-	resp, _ := DoRequest(strings.Replace(ENDPOINT.Retweet, ":id", TweetID, -1), Params, "POST")
+	resp, err := DoRequest(strings.Replace(ENDPOINT.Retweet, ":id", TweetID, -1), Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
 	if strings.Contains(resp, "You have already retweeted this tweet.") {
 		return "", errors.New("You can not retweet a tweet that is already retweeted")
 	}
@@ -415,7 +422,7 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 	Params.Add("status", Status)
 	switch {
 	case Status == "" && MediaId == "":
-		return "", errors.New("Status cannot be empty")
+		return "", errors.New("Status and MediaID cannot both be empty")
 	case MediaId != "":
 		Params.Add("media_ids", MediaId)
 	case ReplyStatusID != "":
@@ -433,7 +440,7 @@ func (P *Account) Tweet(Status string, ReplyStatusID string, MediaId string, Pos
 	}
 
 	if strings.Contains(resp, "errors") {
-		return "", errors.New("ERRORS")
+		return "", errors.New(resp)
 	}
 	return resp, nil
 }
@@ -455,7 +462,6 @@ func (P *Account) Auth() (string, error) {
 
 	switch runtime.GOOS {
 	case "linux":
-		fmt.Println("...")
 		exec.Command("xdg-open", test).Start()
 	case "windows":
 		exec.Command("cmd", "/c", "start", test).Start()
@@ -487,6 +493,7 @@ func DoRequest(Endpoint string, Params url.Values, Method string) (string, error
 		if err != nil {
 			return "", err
 		}
+
 		defer resp.Body.Close()
 
 		body, err := ioutil.ReadAll(resp.Body)
@@ -514,7 +521,6 @@ func DoRequest(Endpoint string, Params url.Values, Method string) (string, error
 	}
 
 	return "", errors.New("You must supply either a GET or POST method.")
-
 }
 
 func (P *Account) TweetURLtoID(link string) string {
