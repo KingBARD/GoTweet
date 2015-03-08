@@ -54,7 +54,8 @@ type EndPoints struct {
 }
 
 var ENDPOINT = EndPoints{
-	Following:          fmt.Sprintf("%sfriends/ids.json,", BASEURL),
+	Followers:          fmt.Sprintf("%sfollowers/ids.json", BASEURL),
+	Following:          fmt.Sprintf("%sfriends/ids.json", BASEURL),
 	DMCreate:           fmt.Sprintf("%sdirect_messages/new.json", BASEURL),
 	DMDelete:           fmt.Sprintf("%sdirect_messages/destroy.json", BASEURL),
 	DirectMessages:     fmt.Sprintf("%sdirect_messages.json", BASEURL),
@@ -87,14 +88,7 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-//NEW
-// func (P *Account) () () {
-
-// 	return resp, nil
-// }
-//NEW
-
-func (P *Account) FollowingList(UserID, ScreenName, Cursor, Count string) (string, error) {
+func (P *Account) FollowersList(UserID, ScreenName, Cursor, Count string) (string, error) {
 
 	var Params = params
 
@@ -118,9 +112,35 @@ func (P *Account) FollowingList(UserID, ScreenName, Cursor, Count string) (strin
 	}
 
 	return resp, nil
+
 }
 
-//NEW
+func (P *Account) FollowingList(UserID, ScreenName, Cursor, Count string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case UserID == "" && ScreenName == "":
+		return "", errors.New("UserID and ScreenName cannot be both empty")
+	case UserID != "":
+		Params.Add("user_id", UserID)
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case Cursor != "":
+		Params.Add("cursor", Cursor)
+	case Count != "":
+		Params.Add("count", Count)
+	}
+
+	resp, err := DoRequest(ENDPOINT.Following, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
 func (P *Account) DMDelete(ID string) (string, error) {
 
 	var Params = params
@@ -136,10 +156,10 @@ func (P *Account) DMDelete(ID string) (string, error) {
 	return resp, nil
 }
 
-//NEW
 func (P *Account) DMCreate(UserID, ScreenName, Text string) (string, error) {
 
 	var Params = params
+
 	Params.Add("text", Text)
 
 	switch {
@@ -161,7 +181,6 @@ func (P *Account) DMCreate(UserID, ScreenName, Text string) (string, error) {
 
 }
 
-//NEW
 func (P *Account) DirectMessages(Count, SkipStatus string) (string, error) {
 	var Params = params
 
