@@ -46,9 +46,18 @@ type EndPoints struct {
 	DMShow             string
 	DMSent             string
 	Search             string
+	DirectMessages     string
+	DMCreate           string
+	DMDelete           string
+	Following          string
+	Followers          string
 }
 
 var ENDPOINT = EndPoints{
+	Following:          fmt.Sprintf("%sfriends/ids.json,", BASEURL),
+	DMCreate:           fmt.Sprintf("%sdirect_messages/new.json", BASEURL),
+	DMDelete:           fmt.Sprintf("%sdirect_messages/destroy.json", BASEURL),
+	DirectMessages:     fmt.Sprintf("%sdirect_messages.json", BASEURL),
 	DMShow:             fmt.Sprintf("%sdirect_messages/show.json", BASEURL),
 	DMSent:             fmt.Sprintf("%sdirect_messages/sent.json", BASEURL),
 	DeleteTweet:        fmt.Sprintf("%sstatuses/destroy/:id.json", BASEURL),
@@ -78,7 +87,97 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-//UNTESTED
+//NEW
+// func (P *Account) () () {
+
+// 	return resp, nil
+// }
+//NEW
+
+func (P *Account) FollowingList(UserID, ScreenName, Cursor, Count string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case UserID == "" && ScreenName == "":
+		return "", errors.New("UserID and ScreenName cannot be both empty")
+	case UserID != "":
+		Params.Add("user_id", UserID)
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case Cursor != "":
+		Params.Add("cursor", Cursor)
+	case Count != "":
+		Params.Add("count", Count)
+	}
+
+	resp, err := DoRequest(ENDPOINT.Followers, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+//NEW
+func (P *Account) DMDelete(ID string) (string, error) {
+
+	var Params = params
+
+	Params.Add("id", ID)
+
+	resp, err := DoRequest(ENDPOINT.DMDelete, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+//NEW
+func (P *Account) DMCreate(UserID, ScreenName, Text string) (string, error) {
+
+	var Params = params
+	Params.Add("text", Text)
+
+	switch {
+	case UserID == "" && ScreenName == "":
+		return "", errors.New("UserID and ScreenName cannot be both empty")
+	case UserID != "":
+		Params.Add("user_id", UserID)
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	}
+
+	resp, err := DoRequest(ENDPOINT.DMCreate, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+//NEW
+func (P *Account) DirectMessages(Count, SkipStatus string) (string, error) {
+	var Params = params
+
+	if Count != "" {
+		Params.Add("count", Count)
+	}
+
+	resp, err := DoRequest(ENDPOINT.DirectMessages, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
 func (P *Account) Search(Query, GeoCode string) (string, error) {
 	var Params = params
 
