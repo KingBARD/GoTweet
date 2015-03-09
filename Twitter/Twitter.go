@@ -51,9 +51,21 @@ type EndPoints struct {
 	DMDelete           string
 	Following          string
 	Followers          string
+	PendingFollowersI  string
+	PendingFollowersO  string
+	FollowUser         string
+	UnFollowUser       string
+	FriendshipUpdate   string
+	FriendshipShow     string
 }
 
 var ENDPOINT = EndPoints{
+	FriendshipShow:     fmt.Sprintf("%sfriendships/show.json", BASEURL),
+	FriendshipUpdate:   fmt.Sprintf("%sfriendships/update.json", BASEURL),
+	UnFollowUser:       fmt.Sprintf("%sfriendships/destroy.json", BASEURL),
+	FollowUser:         fmt.Sprintf("%sfriendships/create.json", BASEURL),
+	PendingFollowersO:  fmt.Sprintf("%sfriendships/outgoing.json", BASEURL),
+	PendingFollowersI:  fmt.Sprintf("%sfriendships/incoming.json", BASEURL),
 	Followers:          fmt.Sprintf("%sfollowers/ids.json", BASEURL),
 	Following:          fmt.Sprintf("%sfriends/ids.json", BASEURL),
 	DMCreate:           fmt.Sprintf("%sdirect_messages/new.json", BASEURL),
