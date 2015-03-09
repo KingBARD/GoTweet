@@ -100,6 +100,62 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
+func (P *Account) FollowUser(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case UserId == "" && ScreenName == "":
+		return "", errors.New("UserID and ScreenName cannot both be empty")
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.FollowUser, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+func (P *Account) PendingFollowersOutgoing(Cursor string) (string, error) {
+
+	var Params = params
+
+	if Cursor != nil {
+		Params.Add("cursor", Cursor)
+	}
+
+	resp, err := DoRequest(ENDPOINT.PendingFollowersO, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+func (P *Account) PendingFollowersIncoming(Cursor string) (string, error) {
+
+	var Params = params
+
+	if Cursor != "" {
+
+		Params.Add("cursor", Cursor)
+	}
+
+	resp, err := DoRequest(ENDPOINT.PendingFollowersI, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
 func (P *Account) FollowersList(UserID, ScreenName, Cursor, Count string) (string, error) {
 
 	var Params = params
