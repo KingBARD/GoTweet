@@ -62,7 +62,6 @@ type EndPoints struct {
 	FriendshipLookup      string
 	VerifyCredentials     string
 	ChangeAccountSettings string
-	UpdateDeliveryDevice  string
 	UpdateProfile         string
 	UpdateBackgroundPic   string
 	UpdatePicture         string
@@ -81,7 +80,6 @@ var ENDPOINT = EndPoints{
 	UpdatePicture:         fmt.Sprintf("%saccount/update_profile_image.json", BASEURL),
 	UpdateBackgroundPic:   fmt.Sprintf("%saccount/update_profile_background_image.json", BASEURL),
 	UpdateProfile:         fmt.Sprintf("%saccount/update_profile.json", BASEURL),
-	UpdateDeliveryDevice:  fmt.Sprintf("%saccount/update_delivery_device.json", BASEURL),
 	ChangeAccountSettings: fmt.Sprintf("%saccount/settings.json", BASEURL),
 	VerifyCredentials:     fmt.Sprintf("%saccount/verify_credentials.json", BASEURL),
 	FriendshipLookup:      fmt.Sprintf("%sfriendships/lookup.json", BASEURL),
@@ -126,6 +124,11 @@ var oauthClient = oauth.Client{
 }
 
 var token = &oauthClient.Credentials
+
+//TODO
+func (P *Account) UpdateProfile(Options map[string]string) (string, error) {
+
+}
 
 func (P *Account) ChangeAccountSettings(Options map[string]string) (string, error) {
 
