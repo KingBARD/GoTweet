@@ -27,39 +27,66 @@ type Account struct {
 var params = url.Values{}
 
 type EndPoints struct {
-	GetAccountSettings string
-	MentionsTimeline   string
-	UserTimeline       string
-	HomeTimeline       string
-	RetweetsOfMe       string
-	RetweetsByID       string
-	ShowTweet          string
-	Tweet              string
-	Retweet            string
-	Oembed             string
-	Favourite          string
-	LookUp             string
-	Retweeters         string
-	MediaUpload        string
-	ReportSpam         string
-	DeleteTweet        string
-	DMShow             string
-	DMSent             string
-	Search             string
-	DirectMessages     string
-	DMCreate           string
-	DMDelete           string
-	Following          string
-	Followers          string
-	PendingFollowersI  string
-	PendingFollowersO  string
-	FollowUser         string
-	UnFollowUser       string
-	FriendshipUpdate   string
-	FriendshipShow     string
+	GetAccountSettings    string
+	MentionsTimeline      string
+	UserTimeline          string
+	HomeTimeline          string
+	RetweetsOfMe          string
+	RetweetsByID          string
+	ShowTweet             string
+	Tweet                 string
+	Retweet               string
+	Oembed                string
+	Favourite             string
+	LookUp                string
+	Retweeters            string
+	MediaUpload           string
+	ReportSpam            string
+	DeleteTweet           string
+	DMShow                string
+	DMSent                string
+	Search                string
+	DirectMessages        string
+	DMCreate              string
+	DMDelete              string
+	Following             string
+	Followers             string
+	PendingFollowersI     string
+	PendingFollowersO     string
+	FollowUser            string
+	UnFollowUser          string
+	FriendshipUpdate      string
+	FriendshipShow        string
+	FriendsList           string
+	FollowersList         string
+	FriendshipLookup      string
+	VerifyCredentials     string
+	ChangeAccountSettings string
+	UpdateDeliveryDevice string
+	UpdateProfile string
+	UpdateBackgroundPic string
+	UpdatePicture string
+	BlockList string
+	BlockedIDs string
+	BlockUser string
+	UnBlockUser string
 }
 
 var ENDPOINT = EndPoints{
+
+	UnBlockUser: fmt.Sprintf("%sblocks/destroy.json", BASEURL),
+	BlockUser: fmt.Sprintf("%sblocks/create.json", BASEURL),
+	BlockedIDs: fmt.Sprintf("%sblocks/ids.json", BASEURL),
+	BlockList: fmt.Sprintf("%sblocks/list.json", BASEURL),
+	UpdatePicture: fmt.Sprintf("%saccount/update_profile_image.json", BASEURL),
+	UpdateBackgroundPic: fmt.Sprintf("%saccount/update_profile_background_image.json", BASEURL),
+	UpdateProfile: fmt.Sprintf("%saccount/update_profile.json", BASEURL),
+	UpdateDeliveryDevice: fmt.Sprintf("%saccount/update_delivery_device.json", BASEURL),
+	ChangeAccountSettings: fmt.Sprintf("%saccount/settings.json", BASEURL)
+	VerifyCredentials:  fmt.Sprintf("%saccount/verify_credentials.json", BASEURL),
+	FriendshipLookup:   fmt.Sprintf("%sfriendships/lookup.json", BASEURL),
+	FriendsList:        fmt.Sprintf("%sfriends/list.json", BASEURL),
+	FollowersList:      fmt.Sprintf("%sfollowers/list.json", BASEURL),
 	FriendshipShow:     fmt.Sprintf("%sfriendships/show.json", BASEURL),
 	FriendshipUpdate:   fmt.Sprintf("%sfriendships/update.json", BASEURL),
 	UnFollowUser:       fmt.Sprintf("%sfriendships/destroy.json", BASEURL),
@@ -99,6 +126,45 @@ var oauthClient = oauth.Client{
 }
 
 var token = &oauthClient.Credentials
+
+func (P *Account) FriendShipShow(ScreenName, TargetScreenName string) (string, error) {
+
+	var Params = params
+
+	Params.Add("source_screen_name", ScreenName)
+
+	Params.Add("target_screen_name", TargetScreenName)
+
+	resp, err := DoRequest(ENDPOINT.FriendshipShow, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) UnFollowUser(ScreenName, UserID string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case UserId == "" && ScreenName == "":
+		return "", errors.New("UserID and ScreenName cannot both be empty")
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.UnFollowUser, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
 
 func (P *Account) FollowUser(ScreenName, UserId string) (string, error) {
 
