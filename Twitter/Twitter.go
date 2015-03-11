@@ -62,61 +62,61 @@ type EndPoints struct {
 	FriendshipLookup      string
 	VerifyCredentials     string
 	ChangeAccountSettings string
-	UpdateDeliveryDevice string
-	UpdateProfile string
-	UpdateBackgroundPic string
-	UpdatePicture string
-	BlockList string
-	BlockedIDs string
-	BlockUser string
-	UnBlockUser string
+	UpdateDeliveryDevice  string
+	UpdateProfile         string
+	UpdateBackgroundPic   string
+	UpdatePicture         string
+	BlockList             string
+	BlockedIDs            string
+	BlockUser             string
+	UnBlockUser           string
 }
 
 var ENDPOINT = EndPoints{
 
-	UnBlockUser: fmt.Sprintf("%sblocks/destroy.json", BASEURL),
-	BlockUser: fmt.Sprintf("%sblocks/create.json", BASEURL),
-	BlockedIDs: fmt.Sprintf("%sblocks/ids.json", BASEURL),
-	BlockList: fmt.Sprintf("%sblocks/list.json", BASEURL),
-	UpdatePicture: fmt.Sprintf("%saccount/update_profile_image.json", BASEURL),
-	UpdateBackgroundPic: fmt.Sprintf("%saccount/update_profile_background_image.json", BASEURL),
-	UpdateProfile: fmt.Sprintf("%saccount/update_profile.json", BASEURL),
-	UpdateDeliveryDevice: fmt.Sprintf("%saccount/update_delivery_device.json", BASEURL),
-	ChangeAccountSettings: fmt.Sprintf("%saccount/settings.json", BASEURL)
-	VerifyCredentials:  fmt.Sprintf("%saccount/verify_credentials.json", BASEURL),
-	FriendshipLookup:   fmt.Sprintf("%sfriendships/lookup.json", BASEURL),
-	FriendsList:        fmt.Sprintf("%sfriends/list.json", BASEURL),
-	FollowersList:      fmt.Sprintf("%sfollowers/list.json", BASEURL),
-	FriendshipShow:     fmt.Sprintf("%sfriendships/show.json", BASEURL),
-	FriendshipUpdate:   fmt.Sprintf("%sfriendships/update.json", BASEURL),
-	UnFollowUser:       fmt.Sprintf("%sfriendships/destroy.json", BASEURL),
-	FollowUser:         fmt.Sprintf("%sfriendships/create.json", BASEURL),
-	PendingFollowersO:  fmt.Sprintf("%sfriendships/outgoing.json", BASEURL),
-	PendingFollowersI:  fmt.Sprintf("%sfriendships/incoming.json", BASEURL),
-	Followers:          fmt.Sprintf("%sfollowers/ids.json", BASEURL),
-	Following:          fmt.Sprintf("%sfriends/ids.json", BASEURL),
-	DMCreate:           fmt.Sprintf("%sdirect_messages/new.json", BASEURL),
-	DMDelete:           fmt.Sprintf("%sdirect_messages/destroy.json", BASEURL),
-	DirectMessages:     fmt.Sprintf("%sdirect_messages.json", BASEURL),
-	DMShow:             fmt.Sprintf("%sdirect_messages/show.json", BASEURL),
-	DMSent:             fmt.Sprintf("%sdirect_messages/sent.json", BASEURL),
-	DeleteTweet:        fmt.Sprintf("%sstatuses/destroy/:id.json", BASEURL),
-	ReportSpam:         fmt.Sprintf("%susers/report_spam.json", BASEURL),
-	GetAccountSettings: fmt.Sprintf("%saccount/settings.json", BASEURL),
-	Favourite:          fmt.Sprintf("%sfavorites/create.json", BASEURL),
-	MentionsTimeline:   fmt.Sprintf("%sstatuses/mentions_timeline.json", BASEURL),
-	UserTimeline:       fmt.Sprintf("%sstatuses/user_timeline.json", BASEURL),
-	HomeTimeline:       fmt.Sprintf("%sstatuses/home_timeline.json", BASEURL),
-	RetweetsOfMe:       fmt.Sprintf("%sstatuses/retweets_of_me.json", BASEURL),
-	RetweetsByID:       fmt.Sprintf("%sstatuses/retweets/:id.json", BASEURL),
-	ShowTweet:          fmt.Sprintf("%sstatuses/show.json", BASEURL),
-	Tweet:              fmt.Sprintf("%sstatuses/update.json", BASEURL),
-	Retweet:            fmt.Sprintf("%sstatuses/retweet/:id.json", BASEURL),
-	Oembed:             fmt.Sprintf("%sstatuses/oembed.json", BASEURL),
-	Retweeters:         fmt.Sprintf("%sstatuses/retweeters/ids.json", BASEURL),
-	LookUp:             fmt.Sprintf("%sstatuses/lookup.json", BASEURL),
-	MediaUpload:        fmt.Sprintf("%smedia/upload.json", BASEURL),
-	Search:             fmt.Sprintf("%ssearch/tweets.json", BASEURL),
+	UnBlockUser:           fmt.Sprintf("%sblocks/destroy.json", BASEURL),
+	BlockUser:             fmt.Sprintf("%sblocks/create.json", BASEURL),
+	BlockedIDs:            fmt.Sprintf("%sblocks/ids.json", BASEURL),
+	BlockList:             fmt.Sprintf("%sblocks/list.json", BASEURL),
+	UpdatePicture:         fmt.Sprintf("%saccount/update_profile_image.json", BASEURL),
+	UpdateBackgroundPic:   fmt.Sprintf("%saccount/update_profile_background_image.json", BASEURL),
+	UpdateProfile:         fmt.Sprintf("%saccount/update_profile.json", BASEURL),
+	UpdateDeliveryDevice:  fmt.Sprintf("%saccount/update_delivery_device.json", BASEURL),
+	ChangeAccountSettings: fmt.Sprintf("%saccount/settings.json", BASEURL),
+	VerifyCredentials:     fmt.Sprintf("%saccount/verify_credentials.json", BASEURL),
+	FriendshipLookup:      fmt.Sprintf("%sfriendships/lookup.json", BASEURL),
+	FriendsList:           fmt.Sprintf("%sfriends/list.json", BASEURL),
+	FollowersList:         fmt.Sprintf("%sfollowers/list.json", BASEURL),
+	FriendshipShow:        fmt.Sprintf("%sfriendships/show.json", BASEURL),
+	FriendshipUpdate:      fmt.Sprintf("%sfriendships/update.json", BASEURL),
+	UnFollowUser:          fmt.Sprintf("%sfriendships/destroy.json", BASEURL),
+	FollowUser:            fmt.Sprintf("%sfriendships/create.json", BASEURL),
+	PendingFollowersO:     fmt.Sprintf("%sfriendships/outgoing.json", BASEURL),
+	PendingFollowersI:     fmt.Sprintf("%sfriendships/incoming.json", BASEURL),
+	Followers:             fmt.Sprintf("%sfollowers/ids.json", BASEURL),
+	Following:             fmt.Sprintf("%sfriends/ids.json", BASEURL),
+	DMCreate:              fmt.Sprintf("%sdirect_messages/new.json", BASEURL),
+	DMDelete:              fmt.Sprintf("%sdirect_messages/destroy.json", BASEURL),
+	DirectMessages:        fmt.Sprintf("%sdirect_messages.json", BASEURL),
+	DMShow:                fmt.Sprintf("%sdirect_messages/show.json", BASEURL),
+	DMSent:                fmt.Sprintf("%sdirect_messages/sent.json", BASEURL),
+	DeleteTweet:           fmt.Sprintf("%sstatuses/destroy/:id.json", BASEURL),
+	ReportSpam:            fmt.Sprintf("%susers/report_spam.json", BASEURL),
+	GetAccountSettings:    fmt.Sprintf("%saccount/settings.json", BASEURL),
+	Favourite:             fmt.Sprintf("%sfavorites/create.json", BASEURL),
+	MentionsTimeline:      fmt.Sprintf("%sstatuses/mentions_timeline.json", BASEURL),
+	UserTimeline:          fmt.Sprintf("%sstatuses/user_timeline.json", BASEURL),
+	HomeTimeline:          fmt.Sprintf("%sstatuses/home_timeline.json", BASEURL),
+	RetweetsOfMe:          fmt.Sprintf("%sstatuses/retweets_of_me.json", BASEURL),
+	RetweetsByID:          fmt.Sprintf("%sstatuses/retweets/:id.json", BASEURL),
+	ShowTweet:             fmt.Sprintf("%sstatuses/show.json", BASEURL),
+	Tweet:                 fmt.Sprintf("%sstatuses/update.json", BASEURL),
+	Retweet:               fmt.Sprintf("%sstatuses/retweet/:id.json", BASEURL),
+	Oembed:                fmt.Sprintf("%sstatuses/oembed.json", BASEURL),
+	Retweeters:            fmt.Sprintf("%sstatuses/retweeters/ids.json", BASEURL),
+	LookUp:                fmt.Sprintf("%sstatuses/lookup.json", BASEURL),
+	MediaUpload:           fmt.Sprintf("%smedia/upload.json", BASEURL),
+	Search:                fmt.Sprintf("%ssearch/tweets.json", BASEURL),
 }
 
 var oauthClient = oauth.Client{
@@ -127,7 +127,47 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-func (P *Account) FriendShipShow(ScreenName, TargetScreenName string) (string, error) {
+func (P *Account) ChangeAccountSettings(Options map[string]string) (string, error) {
+
+	var Params = params
+
+	Pref := []string{"sleep_time_enabled", "trend_location_woeid", "start_sleep_time", "end_sleep_time", "time_zone", "lang"}
+
+	Op := make(map[string]string)
+
+	for key, value := range Options {
+		for _, ele := range Pref {
+			if strings.Contains(key, ele) {
+				Op[key] = value
+			}
+		}
+	}
+
+	for k, v := range Op {
+		params.Add(k, v)
+	}
+
+	resp, err := DoRequest(ENDPOINT.ChangeAccountSettings, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) VerifyCredential() (string, error) {
+
+	resp, err := DoRequest(ENDPOINT.VerifyCredentials, nil, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) FriendshipShow(ScreenName, TargetScreenName string) (string, error) {
 
 	var Params = params
 
@@ -144,11 +184,12 @@ func (P *Account) FriendShipShow(ScreenName, TargetScreenName string) (string, e
 	return resp, nil
 }
 
-func (P *Account) UnFollowUser(ScreenName, UserID string) (string, error) {
+func (P *Account) UnFollowUser(ScreenName, UserId string) (string, error) {
 
 	var Params = params
 
 	switch {
+
 	case UserId == "" && ScreenName == "":
 		return "", errors.New("UserID and ScreenName cannot both be empty")
 	case ScreenName != "":
@@ -193,7 +234,7 @@ func (P *Account) PendingFollowersOutgoing(Cursor string) (string, error) {
 
 	var Params = params
 
-	if Cursor != nil {
+	if Cursor != "" {
 		Params.Add("cursor", Cursor)
 	}
 
