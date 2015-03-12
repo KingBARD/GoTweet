@@ -125,8 +125,71 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-func (P *Account) UpdateBackgroundPicture() (string, error) {
+func (P *Account) ChangeProfilePicture(FileName string) (string, error) {
 
+	var Params = params
+
+	F, _, err := ImageToBase64(FileName)
+
+	if err != nil {
+		return "", err
+	}
+
+	Params.Add("image", F)
+
+	resp, err := DoRequest(ENDPOINT.UpdatePicture, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) RemoveBackgroundPicture() (string, error) {
+	var Params = params
+
+	Params.Add("use", "false")
+
+	resp, err := DoRequest(ENDPOINT.UpdateBackgroundPic, Params, "POST")
+
+	if err != nil {
+		return "", nil
+	}
+
+	return resp, nil
+}
+
+func (P *Account) UpdateBackgroundPicture(FilePath string, Tile bool) (string, error) {
+
+	var Params = params
+
+	f, i, err := ImageToBase64(FilePath)
+
+	if err != nil {
+		return "", err
+	}
+	//if file size is greater than 800kb we return an error because twitter will not accept anything > 800kbs.
+	if i > 800 {
+		return "", errors.New("Images may not be largers than 800kbs")
+	}
+
+	fmt.Println(f)
+
+	Params.Add("image", f)
+	Params.Add("use", "1")
+
+	if Tile == true {
+		Params.Add("tile", "true")
+	}
+
+	resp, err := DoRequest(ENDPOINT.UpdateBackgroundPic, Params, "POST")
+
+	if err != nil {
+		return "", nil
+	}
+
+	return resp, nil
 }
 func (P *Account) UpdateProfile(Options map[string]string) (string, error) {
 
@@ -595,12 +658,22 @@ func (P *Account) LookUp(IDS []string) (string, error) {
 
 	return resp, nil
 }
-func (P *Account) MediaUpload(FilePath string, tweet bool) (string, error) {
 
-	filedata, _ := ioutil.ReadFile(FilePath)
+func ImageToBase64(FilePath string) (string, int, error) {
+
+	filedata, err := ioutil.ReadFile(FilePath)
+
+	if err != nil {
+		return "", 0, err
+	}
 
 	encoded := base64.StdEncoding.EncodeToString(filedata)
 
+	return encoded, len(filedata) / 1000, nil
+}
+func (P *Account) MediaUpload(FilePath string, tweet bool) (string, error) {
+
+	encoded, _, _ := ImageToBase64(FilePath)
 	var Params = params
 
 	Params.Add("media", encoded)
