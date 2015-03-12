@@ -125,9 +125,35 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-//TODO
+func (P *Account) UpdateBackgroundPicture() (string, error) {
+
+}
 func (P *Account) UpdateProfile(Options map[string]string) (string, error) {
 
+	Par := []string{"name", "url", "location", "description", "profile_link_color"}
+
+	var Params = params
+
+	Op := make(map[string]string)
+
+	for key, value := range Options {
+		for _, ele := range Par {
+			if strings.Contains(key, ele) {
+				Op[key] = value
+			}
+		}
+	}
+
+	for k, v := range Op {
+		Params.Add(k, v)
+	}
+	resp, err := DoRequest(ENDPOINT.UpdatePicture, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 
 func (P *Account) ChangeAccountSettings(Options map[string]string) (string, error) {
@@ -147,7 +173,7 @@ func (P *Account) ChangeAccountSettings(Options map[string]string) (string, erro
 	}
 
 	for k, v := range Op {
-		params.Add(k, v)
+		Params.Add(k, v)
 	}
 
 	resp, err := DoRequest(ENDPOINT.ChangeAccountSettings, Params, "POST")
