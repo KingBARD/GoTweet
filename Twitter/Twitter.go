@@ -125,6 +125,67 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
+func (P *Account) UnBlockUser(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case ScreenName == "" && UserId == "":
+		return "", errors.New("ScreenName and UserId cannot both be empty")
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.UnBlockUser, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) BlockUser(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case ScreenName == "" && UserId == "":
+		return "", errors.New("ScreenName and UserId cannot both be empty")
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.BlockUser, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+// func (P *Account) BlockIds() (string, error) {
+
+// }
+
+//Only supports 5000 user objects currently (Need to sort out cursors)
+func (P *Account) BlockList() (string, error) {
+
+	resp, err := DoRequest(ENDPOINT.BlockList, nil, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
 func (P *Account) ChangeProfilePicture(FileName string) (string, error) {
 
 	var Params = params
