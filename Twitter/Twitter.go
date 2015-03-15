@@ -69,10 +69,21 @@ type EndPoints struct {
 	BlockedIDs            string
 	BlockUser             string
 	UnBlockUser           string
+	UsersLookup           string
+	UsersShow             string
+	UsersSearch           string
+	UpdateBanner          string
+	RemoveBanner          string
+	GetUserBanner         string
 }
 
 var ENDPOINT = EndPoints{
-
+	GetUserBanner:         fmt.Sprintf("%susers/profile_banner.json", BASEURL),
+	RemoveBanner:          fmt.Sprintf("%saccount/remove_profile_banner.json", BASEURL),
+	UpdateBanner:          fmt.Sprintf("%saccount/update_profile_banner.json", BASEURL),
+	UsersSearch:           fmt.Sprintf("%susers/search.json", BASEURL),
+	UsersShow:             fmt.Sprintf("%susers/show.json", BASEURL),
+	UsersLookup:           fmt.Sprintf("%susers/lookup.json", BASEURL),
 	UnBlockUser:           fmt.Sprintf("%sblocks/destroy.json", BASEURL),
 	BlockUser:             fmt.Sprintf("%sblocks/create.json", BASEURL),
 	BlockedIDs:            fmt.Sprintf("%sblocks/ids.json", BASEURL),
