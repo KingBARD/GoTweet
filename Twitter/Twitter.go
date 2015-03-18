@@ -75,9 +75,19 @@ type EndPoints struct {
 	UpdateBanner          string
 	RemoveBanner          string
 	GetUserBanner         string
+	MuteUser              string
+	UnmuteUser            string
+	MutedIds              string
+	MuteUserList          string
+	FavoriteList          string
+	UnFavorite            string
 }
 
 var ENDPOINT = EndPoints{
+	UnFavorite:            fmt.Sprintf("%favorites/destroy.json", BASEURL),
+	FavoritesList:         fmt.Sprintf("%favorites/list.json", BASEURL),
+	MuteUser:              fmt.Sprintf("%smutes/users/create.json", BASEURL),
+	UnmuteUser:            fmt.Sprintf("%smutes/users/destroy.json", BASEURL),
 	GetUserBanner:         fmt.Sprintf("%susers/profile_banner.json", BASEURL),
 	RemoveBanner:          fmt.Sprintf("%saccount/remove_profile_banner.json", BASEURL),
 	UpdateBanner:          fmt.Sprintf("%saccount/update_profile_banner.json", BASEURL),
@@ -135,6 +145,29 @@ var oauthClient = oauth.Client{
 }
 
 var token = &oauthClient.Credentials
+
+func (P *Account) GetUserBanner() (string, error) {
+
+}
+
+func (P *Account) RemoveBanner() (string, error) {
+}
+
+func (P *Account) UpdateBanner() (string, error) {
+
+}
+
+func (P *Account) UsersSearch() (string, error) {
+
+}
+
+func (P *Account) UsersShow() (string, error) {
+
+}
+
+func (P *Account) UserLookUp() (string, error) {
+
+}
 
 func (P *Account) UnBlockUser(ScreenName, UserId string) (string, error) {
 
