@@ -157,16 +157,59 @@ func (P *Account) UpdateBanner() (string, error) {
 
 }
 
-func (P *Account) UsersSearch() (string, error) {
+func (P *Account) UsersSearch(Q,Page) (string, error) {
+	var Params = params
+
+	switch {
+	case Q != "":
+	case Page != "":
+	}
+}
+
+func (P *Account) UsersShow(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case ScreenName == "" && UserId == "":
+		return "", errors.New("ScreenName and UserId cannot both be empty")
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.UsersShow, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
 
 }
 
-func (P *Account) UsersShow() (string, error) {
+func (P *Account) UserLookUp(ScreenName, UserId string) (string, error) {
 
-}
+	var Params = params
 
-func (P *Account) UserLookUp() (string, error) {
+	switch {
+	case ScreenName == "" && UserId == "":
+		return "", errors.New("ScreenName and UserId cannot both be empty")
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
 
+	resp, err := DoRequest(ENDPOINT.UsersLookup, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 
 func (P *Account) UnBlockUser(ScreenName, UserId string) (string, error) {
