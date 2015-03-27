@@ -262,7 +262,7 @@ func (P *Account) UpdateBanner(Image, Width, Height, Offset_Left, Offset_Top str
 
 	var Params = params
 
-	Image, _, err = ImageToBase64(Image)
+	Image, _, err := ImageToBase64(Image)
 
 	if err != nil {
 		return "", err
