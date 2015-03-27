@@ -83,9 +83,10 @@ type EndPoints struct {
 	UnFavorite            string
 }
 
+//Twitter Endpoints
 var ENDPOINT = EndPoints{
 	UnFavorite:            fmt.Sprintf("%favorites/destroy.json", BASEURL),
-	FavoritesList:         fmt.Sprintf("%favorites/list.json", BASEURL),
+	FavoriteList:          fmt.Sprintf("%favorites/list.json", BASEURL),
 	MuteUser:              fmt.Sprintf("%smutes/users/create.json", BASEURL),
 	UnmuteUser:            fmt.Sprintf("%smutes/users/destroy.json", BASEURL),
 	GetUserBanner:         fmt.Sprintf("%susers/profile_banner.json", BASEURL),
@@ -146,24 +147,162 @@ var oauthClient = oauth.Client{
 
 var token = &oauthClient.Credentials
 
-func (P *Account) GetUserBanner() (string, error) {
+func (P *Account) UnFavorite(ID string) (string, error) {
 
+	var Params = params
+
+	Params.Add("id", ID)
+
+	resp, err := DoRequest(ENDPOINT.UnFavorite, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 
-func (P *Account) RemoveBanner() (string, error) {
-}
+func (P *Account) FavoritesList(ScreenName, UserId, Count string) (string, error) {
 
-func (P *Account) UpdateBanner() (string, error) {
-
-}
-
-func (P *Account) UsersSearch(Q,Page) (string, error) {
 	var Params = params
 
 	switch {
-	case Q != "":
-	case Page != "":
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case Count != "":
+		Params.Add("count", Count)
+	case UserId != "":
+		Params.Add("user_id", UserId)
 	}
+
+	resp, err := DoRequest(ENDPOINT.FavoriteList, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+func (P *Account) UnMuteUser(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.UnmuteUser, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+func (P *Account) MuteUser(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.MuteUser, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+func (P *Account) GetUserBanner(ScreenName, UserId string) (string, error) {
+
+	var Params = params
+
+	switch {
+	case ScreenName != "":
+		Params.Add("screen_name", ScreenName)
+	case UserId != "":
+		Params.Add("user_id", UserId)
+	}
+
+	resp, err := DoRequest(ENDPOINT.GetUserBanner, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) RemoveBanner() (string, error) {
+
+	resp, err := DoRequest(ENDPOINT.RemoveBanner, nil, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+}
+
+func (P *Account) UpdateBanner(Image, Width, Height, Offset_Left, Offset_Top string) (string, error) {
+
+	var Params = params
+
+	Image, _, err = ImageToBase64(Image)
+
+	if err != nil {
+		return "", err
+	}
+
+	switch {
+	case Image == "":
+		return "", errors.New("Image cannot be empty")
+	case Width != "":
+		Params.Add("width", Width)
+	case Height != "":
+		Params.Add("height", Height)
+	case Offset_Left != "":
+		Params.Add("offset_left", Offset_Left)
+	case Offset_Top != "":
+		Params.Add("offset_top", Offset_Top)
+	}
+
+	resp, err := DoRequest(ENDPOINT.UpdateBanner, Params, "POST")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
+
+}
+
+func (P *Account) UsersSearch(Q, Page string) (string, error) {
+	var Params = params
+	Params.Add("q", Q)
+	Params.Add("page", Page)
+
+	resp, err := DoRequest(ENDPOINT.UsersSearch, Params, "GET")
+
+	if err != nil {
+		return "", err
+	}
+
+	return resp, nil
 }
 
 func (P *Account) UsersShow(ScreenName, UserId string) (string, error) {
@@ -186,8 +325,6 @@ func (P *Account) UsersShow(ScreenName, UserId string) (string, error) {
 	}
 
 	return resp, nil
-}
-
 }
 
 func (P *Account) UserLookUp(ScreenName, UserId string) (string, error) {
