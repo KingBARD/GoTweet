@@ -10,6 +10,12 @@ This library uses the following open source libraries to function:
 * [Jason] - Jason
 * [OAuth] - Go OAuth Library
 
+### Install
+
+```sh
+go get github.com/KingBARD/GoTweet/Twitter
+```
+
 ### Examples:
 
 Tweeting
